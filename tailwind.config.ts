@@ -1,7 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
-  darkMode: 'class',
+  content: [
+    './index.html', // Include the root HTML file
+    './src/**/*.{vue,js,ts,jsx,tsx}', // Include all source files
+  ],
   theme: {
     extend: {
       colors: {
@@ -20,7 +22,7 @@ module.exports = {
         },
         dark: '#2A3335',
         light: '#F5F5F5',
-      }
+      },
     },
   },
   plugins: [],
