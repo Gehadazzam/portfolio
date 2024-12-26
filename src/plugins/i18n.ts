@@ -1,18 +1,21 @@
-import { createI18n } from 'vue-i18n';
+// @/plugins/i18n.ts
+import { createI18n } from "vue-i18n";
 
-// Function to dynamically import and merge all files in a language folder
+// Function to dynamically import and merge all files in language folders
 async function loadLocaleMessages(): Promise<Record<string, object>> {
-  const locales = import.meta.glob('../locales/[A-Za-z0-9-_,\\s]+\\.json');
+  // Updated glob pattern to match files in language folders
+  const locales = import.meta.glob("../locales/*/*.json");
   const messages: Record<string, object> = {};
 
-  for (const key in locales) {
-    const matched = key.match(/\/([a-zA-Z-]+)\//);
+  for (const path in locales) {
+    // Extract language code from path (e.g., 'en' from '/locales/en/home.json')
+    const matched = path.match(/\/locales\/([^/]+)\//);
     if (matched && matched[1]) {
       const locale = matched[1];
       if (!messages[locale]) {
         messages[locale] = {};
       }
-      const module = await locales[key]();
+      const module = await locales[path]();
       Object.assign(messages[locale], module.default);
     }
   }
@@ -20,10 +23,11 @@ async function loadLocaleMessages(): Promise<Record<string, object>> {
   return messages;
 }
 
-// Initialize Vue I18n
 const i18n = createI18n({
-  locale: 'en',         // Default language
-  fallbackLocale: 'en', // Fallback language
+  legacy: false,
+  globalInjection: true,
+  locale: "en",
+  fallbackLocale: "en",
   messages: await loadLocaleMessages(),
 });
 
